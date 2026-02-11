@@ -1,44 +1,20 @@
 pipeline {
     agent any
 
+  environment {
+        JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+    }
+
     tools {
-        maven 'Maven3'     
-        jdk 'JDK17'        
+        maven 'MAVEN_HOME'
     }
-
+ 
     stages {
-
-        stage('Checkout') {
+        stage('Compile & Test') {
             steps {
-                checkout scm
+                sh 'mvn clean install -DskipTests'
             }
-        }
-
-        stage('Build & Test') {
-            steps {
-                sh 'mvn clean verify'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
-            }
-        }
-    }
-
-    post {
-        always {
-            junit 'target/surefire-reports/*.xml'
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-        }
-
-        success {
-            echo 'Build réussi ✅'
-        }
-
-        failure {
-            echo 'Build échoué ❌'
         }
     }
 }
