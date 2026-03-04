@@ -15,7 +15,7 @@ pipeline {
 
         stage('SONARQUBE Analysis') {
             environment {
-                SONAR_HOST_URL = 'http://192.168.56.10:9000'   // change to your SonarQube IP
+                SONAR_HOST_URL = 'http://192.168.33.10:9000'   // change to your SonarQube IP
             }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
