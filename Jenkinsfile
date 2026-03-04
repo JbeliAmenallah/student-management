@@ -12,10 +12,19 @@ pipeline {
                 sh 'mvn clean install -DskipTests'
             }
         }
+
         stage('SONARQUBE Analysis') {
+            environment {
+                SONAR_HOST_URL = 'http://192.168.56.10:9000'   // change to your SonarQube IP
+            }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
-                    sh "mvn sonar:sonar -Dsonar.projectKey=devops_git -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN}"
+                    sh """
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=devops_git \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.token=$SONAR_TOKEN
+                    """
                 }
             }
         }
